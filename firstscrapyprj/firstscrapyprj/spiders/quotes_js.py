@@ -5,8 +5,8 @@ from scrapy.linkextractors import LinkExtractor
 
 # парсинг с помощью CSS
 
-class QuotesCssSpider(scrapy.Spider):
-    name = "quotes_css"
+class QuotesJsSpider(scrapy.Spider):
+    name = "quotes_js"
     allowed_domains = ["quotes.toscrape.com"]    
     """
     start_urls = [
