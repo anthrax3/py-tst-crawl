@@ -8,13 +8,13 @@ class QuotesTableSpider(scrapy.Spider):
     allowed_domains = ["quotes.toscrape.com"]    
     """
     start_urls = [
-        "http://quotes.toscrape.com/tableful/"
+        "http://quotes.toscrape.com/tableful/page/1/"
     ]   
   
     """
     def start_requests(self):
         urls = [
-                "http://quotes.toscrape.com/tableful/"                
+                "http://quotes.toscrape.com/tableful/page/1/"                
         ]
         items=[]
         for url in urls:
@@ -22,6 +22,8 @@ class QuotesTableSpider(scrapy.Spider):
 
     def parse(self,response):
         # заполнение структкры данных отдельно текста цитаты и отдельно тегов
+        page = response.url.split("/")[-2]
+        print("Текущая страница: ",page)
         for quote in response.css("td[style*='top']"):
             item = FirstscrapyprjItem()        
             text_list = response.css("td[style*='top']::text").extract()
@@ -41,10 +43,15 @@ class QuotesTableSpider(scrapy.Spider):
             yield item           
             i=i+1 
         
-        # опредление урла следующей страницы   
-        # НАДО ПРАВИЛЬНО ОПРЕДЕЛЯТЬ СЛЕДУЮЩУЮ СТРАНИЦУ
-        next_page = response.css("a[href*='tableful/page']::attr(href)").extract()
-        #response.css("a[href*='tableful/page/']::text").extract()
+        # опредление урла следующей страницы           
+        pages = response.css("a[href*='tableful/page']::attr(href)").extract()
+        next_page = None
+        for p in pages:
+            num_page = int(p.split("/")[-2])
+            print("NUM PAGE = ",num_page)
+            print("TYPE NUM PAGE = ",type(num_page))
+            if num_page>int(page):
+                next_page = p        
         print("Страница = ", next_page)
         if next_page is not None:
              # обработка следующей страницы
