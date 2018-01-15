@@ -8,14 +8,17 @@ import json
 # парсинг с помощью CSS
 
 # ИНФА http://gis-lab.info/qa/scrapy.html
-
+"""
+class OGermanYellowPagesLoader(XPathItemLoader):
+    pass
+"""
 class GermanYellowPagesCssSpider(scrapy.Spider):
     name = "germanyp_css"
     allowed_domains = ["dastelefonbuch.de"]    
     
     start_urls = [
       #"https://adresse.dastelefonbuch.de/K%C3%B6ln/3-Tier%C3%A4rzte-Dr-med-vet-Ulrich-Busch-K%C3%B6ln-Neusser-Landstr.html"
-      "https://www.dastelefonbuch.de/Suche/Tierarzt/1"
+      "https://www.dastelefonbuch.de/Suche/Automobile"
     ]   
     
 
@@ -24,10 +27,18 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
         Rule(LinkExtractor(allow=('adresse.dastelefonbuch.de', )), callback='parse_address_page'),
     )
     
-    """
+    
     def parse(self,response):
-        pass
-    """
+        print("ССылка = ",response.url)
+        urls = response.css("a[class*='name']::attr(href)").extract()
+
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse_address_page)
+        
+        next_page = response.css('a[class="nextLink next"]::attr(href)').extract_first()
+        if next_page is not None:
+            yield scrapy.Request(url=next_page, callback=self.parse)            
+    
 
     def parse_address_page(self,response):
         item = GermanYellowPageItem()
@@ -39,9 +50,9 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
             t2 = data.css('div[class="maininfo clearfix"] span[class="nr"]::text').extract()
             if t1 is not None:
                 item["telephone"] = t1.strip()
-            print("t2 = ",t2)
-            if len(t2)>=2 :
-                item["telephone"] = item["telephone"]+(t2[1]).strip()   
+                print("t2 = ",t2)
+                if len(t2)>=2:
+                    item["telephone"] = item["telephone"]+(t2[1]).strip()   
 
             f1 = data.css('span[itemprop="faxNumber"]::text').extract_first()         
             f2 = data.css('li span[class="nr"]::text').extract()            
@@ -50,10 +61,12 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
             if len(f2)>=2:
                 item["fax"] = item["fax"]+f2[1].strip()
             
-            item["email"] = data.css('a[href*="mailto"]::text').extract()
+            email = data.css('a[href*="mailto"]::text').extract_first()
+            if email is not None:
+                item["email"] = email.strip()
             item["url"] = data.css('div[class="secondary"] li a[href*="www"]::text').extract()
             item["rating"] = "".join(data.css('div[itemprop="aggregateRating"] i::text').extract())
-            item["search_request"] = data.css('div[class="subsegment"] p::text').extract()            
+            item["search_request"] = data.css('div[class="subsegment"] p::text').extract()           
            
             address_data = data.css('div[id="coords_holder"]::text').extract_first()
             if address_data is not None:
