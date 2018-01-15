@@ -14,9 +14,11 @@ BOT_NAME = 'firstscrapyprj'
 SPIDER_MODULES = ['firstscrapyprj.spiders']
 NEWSPIDER_MODULE = 'firstscrapyprj.spiders'
 
+FEED_EXPORT_ENCODING = 'utf-8'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'firstscrapyprj (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True

@@ -14,4 +14,12 @@ class FirstscrapyprjItem(scrapy.Item):
     author = scrapy.Field()
     text_quote = scrapy.Field()
     tags = scrapy.Field()
-    pass
+    
+class GermanYellowPageItem(scrapy.Item):
+    # структура данных немецких желтых страниц
+    name_firm = scrapy.Field()
+    vcard_adress = scrapy.Field()
+    vcard_term = scrapy.Field()
+    vcard_telephone = scrapy.Field()
+    vcard_url = scrapy.Field()
+
