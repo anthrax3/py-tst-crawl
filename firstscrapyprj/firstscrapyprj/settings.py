@@ -16,6 +16,10 @@ NEWSPIDER_MODULE = 'firstscrapyprj.spiders'
 
 FEED_EXPORT_ENCODING = 'utf-8'
 
+#Export as CSV Feed
+FEED_FORMAT = "csv"
+FEED_URI = "result_scraping.csv"
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'firstscrapyprj (+http://www.yourdomain.com)'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'

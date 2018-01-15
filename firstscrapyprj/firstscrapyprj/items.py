@@ -18,8 +18,18 @@ class FirstscrapyprjItem(scrapy.Item):
 class GermanYellowPageItem(scrapy.Item):
     # структура данных немецких желтых страниц
     name_firm = scrapy.Field()
-    vcard_adress = scrapy.Field()
-    vcard_term = scrapy.Field()
-    vcard_telephone = scrapy.Field()
-    vcard_url = scrapy.Field()
+    term = scrapy.Field()
+    telephone = scrapy.Field()
+    url = scrapy.Field()
+    fax = scrapy.Field()
+    lat = scrapy.Field() # долгота
+    lon = scrapy.Field() # широта
+    postalcode = street = scrapy.Field()
+    hnr = scrapy.Field()
+    city = scrapy.Field()
+    email = scrapy.Field()
+    rating = scrapy.Field()
+    search_request = scrapy.Field()
+    
+
 
