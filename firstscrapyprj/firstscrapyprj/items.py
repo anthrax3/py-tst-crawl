@@ -30,6 +30,7 @@ class GermanYellowPageItem(scrapy.Item):
     email = scrapy.Field()
     rating = scrapy.Field()
     search_request = scrapy.Field()
+    hours_work = scrapy.Field() # режим работы
     
 
 
