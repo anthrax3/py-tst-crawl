@@ -12,16 +12,27 @@ import json
 class OGermanYellowPagesLoader(XPathItemLoader):
     pass
 """
+
+def clear_list(lists):
+    result=[]
+    for l in lists:
+        result.append(l.strip())
+    return result
+
+
 class GermanYellowPagesCssSpider(scrapy.Spider):
     name = "germanyp_css"
     allowed_domains = ["dastelefonbuch.de"]    
-    
-    start_urls = [
-      #"https://adresse.dastelefonbuch.de/K%C3%B6ln/3-Tier%C3%A4rzte-Dr-med-vet-Ulrich-Busch-K%C3%B6ln-Neusser-Landstr.html"
-      #"https://www.dastelefonbuch.de/Suche/Automobile"
-      #"https://www.dastelefonbuch.de/Suche/Tierarzt/1"
-      "https://www.dastelefonbuch.de/Suche/Auto/Stuttgart"
-    ]   
+        
+    def __init__(self, url=None, *args, **kwargs):
+            # запуск scrapy runspider -a url=quotes.toscrape.com crawler.py
+            super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)
+            # self.allowed_domains = [url]
+            if url is not None:
+                self.start_urls = [url] 
+            else:
+                print("Enter valid web link")
+                return
     
 
     rules = (
@@ -43,27 +54,30 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
 
         print("NEXT PAGE = ",next_page) 
     
+    
 
     def parse_address_page(self,response):
         item = GermanYellowPageItem()
 
         #for data in response.css("div[class='details clearfix']"): 
         data = response
-        name_firm = data.css('div[class="maininfo clearfix"] h1[itemprop="name"]::text').extract_first()
+        name_firm = data.css('div[class="maininfo clearfix"] h1::text').extract_first()
         if name_firm is not None:
             item["name_firm"] = name_firm.strip()
         else:
             return Exception()
-
-        #t1 = data.css('div[class="maininfo clearfix"] span[itemprop="telephone"]::text').extract_first()
+        
         t1 = data.css('div[class="number"] span[itemprop="telephone"]::text').extract_first()
         t2 = data.css('div[class="number"] span[class="nr"]::text').extract()
+        #t3 = "".join(data.css('div[class="number"] span[class="nr"] span::text').extract())
         item["telephone"]=""
         if t1 is not None:
             item["telephone"] = t1.strip()
             #print("t2 = ",t2)
         if len(t2)>=2:
-            item["telephone"] = item["telephone"]+(t2[1]).strip()   
+            item["telephone"] = item["telephone"]+(t2[1]).strip()
+        #item["telephone"] = item["telephone"]+(t3.strip())  
+         
         
 
         f1 = data.css('span[itemprop="faxNumber"]::text').extract_first()         
@@ -76,7 +90,7 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
         email = data.css('a[href*="mailto"]::text').extract_first()
         if email is not None:
             item["email"] = email.strip()
-        item["url"] = data.css('div[class="secondary"] li a[href*="www"]::text').extract()
+        item["url"] = clear_list(data.css('div[class="secondary"] li a[href*="www"]::text').extract())
         item["rating"] = "".join(data.css('div[itemprop="aggregateRating"] i::text').extract())
 
         search_request = data.css('div[class="subsegment"] p::text').extract()  
@@ -84,8 +98,8 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
         for s in search_request:
             item["search_request"].append(s.strip())
         
-        hours_work = response.css('div[class="times clearfix"] time::attr(datetime)').extract()
-        item["hours_work"]= hours_work
+        hours_work = "".join(clear_list(response.css('div[class="times clearfix"] time::attr(datetime)').extract()))
+        item["hours_work"]= hours_work.strip()
         
         address_data = data.css('div[id="coords_holder"]::text').extract_first()
         if address_data is not None:
@@ -96,19 +110,5 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
             item["postalcode"] = address_json["postalcode"]
             item["hnr"] = address_json["hnr"]
             item["city"] = address_json["city"]
-
-        
-
-        """                     
-        
-        term = data.css('div[class="term"]::text').extract()
-        if len(term)>=2:
-            item["vcard_term"] = data.css('div[class="term"] span::text').extract_first()+term[1]
-        t1 = data.css('span[class="nr"] span[itemprop="telephone"]::text').extract_first()
-        t2 = data.css('span[class="nr"]::text').extract()
-        
-        url = data.css('div[class="vcard"] div[class="url"] a::text').extract_first()
-        if url is not None:
-            item["vcard_url"] = url.strip()
-        """
+ 
         yield item
