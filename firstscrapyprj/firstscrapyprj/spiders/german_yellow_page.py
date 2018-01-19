@@ -24,17 +24,20 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
     name = "germanyp_css"
     allowed_domains = ["dastelefonbuch.de"]    
         
-    def __init__(self, url=None, *args, **kwargs):
-            # запуск scrapy runspider -a url=quotes.toscrape.com crawler.py
-            super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)
-            # self.allowed_domains = [url]
+    def __init__(self, url=None, outputfile = "result_scraping.csv",*args, **kwargs):
+            super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)    
+            print("self.settings", self.settings)
+            self.settings['FEED_URI'] = "qqq.csv"
+            print("self.settings", self.settings)
+            return       
+            # url = "https://www.dastelefonbuch.de/Suche/Auto/Leipzig"
+            print("СТРАНИЦА: ", url)
             if url is not None:
                 self.start_urls = [url] 
             else:
                 print("Enter valid web link")
                 return
     
-
     rules = (
         Rule(LinkExtractor(allow=("dastelefonbuch.de")),follow=True),
         Rule(LinkExtractor(allow=('adresse.dastelefonbuch.de', )), callback='parse_address_page'),
@@ -42,6 +45,8 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
     
     
     def parse(self,response):
+        # print("Existing settings: %s" % self.settings.attributes.keys())
+        # print("Default Setting ",scrapy.settings.default_settings)        
         print("ССылка = ",response.url)
         urls = response.css("a[class*='name']::attr(href)").extract()
 

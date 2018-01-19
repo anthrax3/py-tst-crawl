@@ -18,6 +18,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 
 #Export as CSV Feed
 FEED_FORMAT = "csv"
+FEED_EXPORT_FIELDS = ['city','name_firm','telephone', 'fax', 'url', 'email', 'rating', 'term', 'lat', 'lon', 'postalcode', 'hnr',  'search_request', 'hours_work']
 FEED_URI = "result_scraping.csv"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
