@@ -23,14 +23,14 @@ def clear_list(lists):
 class GermanYellowPagesCssSpider(scrapy.Spider):
     name = "germanyp_css"
     allowed_domains = ["dastelefonbuch.de"]    
+    custom_settings = {}  # настройки     
         
     def __init__(self, url=None, outputfile = "result_scraping.csv",*args, **kwargs):
-            super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)    
-            print("self.settings", self.settings)
-            self.settings['FEED_URI'] = "qqq.csv"
-            print("self.settings", self.settings)
-            return       
+            super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)                    
             # url = "https://www.dastelefonbuch.de/Suche/Auto/Leipzig"
+            self.custom_settings['FEED_URI']=outputfile
+            #filename, file_extension = os.path.splitext(outputfile)            
+            self.custom_settings['FEED_FORMAT']="csv"
             print("СТРАНИЦА: ", url)
             if url is not None:
                 self.start_urls = [url] 
@@ -46,7 +46,7 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
     
     def parse(self,response):
         # print("Existing settings: %s" % self.settings.attributes.keys())
-        # print("Default Setting ",scrapy.settings.default_settings)        
+        # print("Default Setting ",scrapy.settings.default_settings)                      
         print("ССылка = ",response.url)
         urls = response.css("a[class*='name']::attr(href)").extract()
 
