@@ -14,6 +14,11 @@ class FirstscrapyprjItem(scrapy.Item):
     author = scrapy.Field()
     text_quote = scrapy.Field()
     tags = scrapy.Field()
+
+class AmazonDeItem(scrapy.Item):
+    # define the fields for your item here like:
+    name = scrapy.Field()
+    
     
 class GermanYellowPageItem(scrapy.Item):
     # структура данных немецких желтых страниц
