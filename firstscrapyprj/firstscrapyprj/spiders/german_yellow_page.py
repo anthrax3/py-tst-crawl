@@ -25,11 +25,10 @@ class GermanYellowPagesCssSpider(scrapy.Spider):
     allowed_domains = ["dastelefonbuch.de"]    
     custom_settings = {}  # настройки     
         
-    def __init__(self, url=None, outputfile = "result_scraping.csv",*args, **kwargs):
+    def __init__(self, url=None, outputfile="result.csv",*args, **kwargs):
             super(GermanYellowPagesCssSpider, self).__init__(*args, **kwargs)                    
             # url = "https://www.dastelefonbuch.de/Suche/Auto/Leipzig"
-            self.custom_settings['FEED_URI']=outputfile
-            #filename, file_extension = os.path.splitext(outputfile)            
+            self.custom_settings['FEED_URI']=outputfile           
             self.custom_settings['FEED_FORMAT']="csv"
             print("СТРАНИЦА: ", url)
             if url is not None:
