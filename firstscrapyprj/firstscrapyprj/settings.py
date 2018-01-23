@@ -17,9 +17,9 @@ NEWSPIDER_MODULE = 'firstscrapyprj.spiders'
 FEED_EXPORT_ENCODING = 'utf-8'
 
 #Export as CSV Feed
-FEED_FORMAT = "csv"
+#FEED_FORMAT = "csv"
 #FEED_EXPORT_FIELDS = ['city','name_firm','telephone', 'fax', 'url', 'email', 'rating', 'term', 'lat', 'lon', 'postalcode', 'hnr',  'search_request', 'hours_work']
-FEED_URI = "result_scraping.csv"
+#FEED_URI = "result_scraping.csv"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'firstscrapyprj (+http://www.yourdomain.com)'
@@ -74,6 +74,9 @@ ROBOTSTXT_OBEY = True
 #ITEM_PIPELINES = {
 #    'firstscrapyprj.pipelines.FirstscrapyprjPipeline': 300,
 #}
+ITEM_PIPELINES = {
+        'firstscrapyprj.pipelines.XlsxWriterPipeline': 300,
+    }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

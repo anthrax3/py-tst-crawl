@@ -8,6 +8,11 @@ from scrapy.linkextractors import LinkExtractor
 class QuotesCssSpider(scrapy.Spider):
     name = "quotes_css"
     allowed_domains = ["quotes.toscrape.com"]    
+
+    ITEM_PIPELINES = {
+        'firstscrapyprj.pipelines.XlsxWriterPipeline': 1,
+    }
+
     """
     start_urls = [
         "http://quotes.toscrape.com/page/1/"
